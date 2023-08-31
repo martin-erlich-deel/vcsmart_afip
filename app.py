@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 from helper import *
 
-df = pd.read_csv('draft BA.TXT')
+df = pd.read_csv('draft BA.TXT',sep=';')
 
 
 st.data_editor(
