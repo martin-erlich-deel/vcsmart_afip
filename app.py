@@ -1,10 +1,13 @@
 import streamlit as st
 import pandas as pd
 from helper import *
+import warnings
+warnings.filterwarnings('ignore')
 import glob
 
 
 txt_files = glob.glob("*.txt")
+txt_files = txt_files + glob.glob("*.TXT")
 cols = ['col_1','col_2','col_3','col_4','col_5','col_6','col_7','col_8','col_9','col_10']
 df = pd.read_csv('columns.txt',sep=';')
 txt_files = [txt for txt in txt_files if txt != 'columns.txt']
@@ -12,13 +15,17 @@ if len(txt_files) < 1:
     st.markdown('No hay archivos .txt en el repositorio')
 elif len(txt_files) >= 1:
     for txt in txt_files:
+        print(txt)
         temp_df = pd.read_csv(txt,sep=';',names=cols)
-        df = pd.concat([df,temp_df])
+        df = pd.concat([df,temp_df])        
 df.pop(df.columns[-1])
+for col in df.columns:
+    df[col] = df[col].astype(str)
+st.markdown(f'Total {len(df)} lineas')    
 st.data_editor(
         filter_dataframe(
         df
-        )
+        ).head(20)
         ,
         column_config={
             "Preview Image": st.column_config.ImageColumn(
